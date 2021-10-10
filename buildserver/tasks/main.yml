@@ -1,0 +1,28 @@
+---
+# tasks file for buildserver
+- name: apt update
+  apt: 
+    update_cache: yes
+
+- name: Сhecking for required applications
+  apt: name={{item}} state=present
+  with_items:
+    - default-jdk
+    - maven
+    - git
+
+- name: Fetch application on git
+  git:
+    repo: https://github.com/boxfuse/boxfuse-sample-java-war-hello.git 
+    dest: /home/app
+
+- name: build webapp
+  shell: mvn package
+  args:
+    chdir: '/home/app'
+
+- name: Pull webapp-file
+  synchronize:
+    mode: pull
+    src: /home/app/target/hello-1.0.war
+    dest: /home/app/hello-1.0.war

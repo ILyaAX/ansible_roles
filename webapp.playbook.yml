@@ -1,0 +1,16 @@
+---
+
+- name: install build
+  hosts: db
+  become: yes
+
+  roles:
+    - buildserver
+
+- name: install web-server tomcat
+  hosts: web
+  become: yes
+
+  roles:
+    - webserver
+
